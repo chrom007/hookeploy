@@ -60,9 +60,11 @@ function processHook(hook) {
 			// console.log(log);
 		}
 		catch(e) {
-			console.log(`${getDate()} | Step ${step} crash on rep ${rep_name}`);
+			return console.log(`${getDate()} | Step ${step} crash on rep ${rep_name}`);
 		}
 	}
+
+	console.log(`${getDate()} | All steps for ${rep_name} rep completed successfully!`);
 }
 
 
