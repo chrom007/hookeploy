@@ -1,9 +1,17 @@
 const http = require("http");
 
 const server = http.createServer((req, res) => {
+	var data = "";
 	console.log("New connection");
-	console.log(req);
-	res.end("OK");
+	
+	req.on("data", (chunk) => {
+		data += chunk;
+	});
+
+	req.on("end", () => {
+		console.log("Data: ", data);
+		res.end("OK");
+	});
 });
 
 server.listen(9000, () => {
