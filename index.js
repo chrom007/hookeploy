@@ -17,8 +17,6 @@ function createServer() {
 	server = http.createServer((req, res) => {
 		var date = new Date();
 		var data = "";
-
-		console.log("New connection", date);
 		
 		req.on("data", (chunk) => {
 			data += chunk;
@@ -32,22 +30,22 @@ function createServer() {
 	});
 
 	server.listen(port, () => {
-		console.log(`Hookeploy started as ${port} port`);
+		console.log(`\n${getDate()} | Hookeploy started as ${port} port`);
 	});
 }
 
 
 function processHook(hook) {
-	if (hook.length < 50) return console.log("Not github hook");
+	if (hook.length < 50) return console.log(`${getDate()} | Not github hook`);
 
 	var data = typeof hook == "string" ? JSON.parse(hook) : hook;
 	var rep_name = data.repository.name;
 	var rep_folder = config.reps[rep_name] || null;
 	var timeout = config.deploy_timeout || 900000;
 
-	console.log(`\nWebhook for ${rep_name} has started!`);
+	console.log(`\n${getDate()} | Webhook for ${rep_name} has started!`);
 
-	if (!rep_folder) return console.log("Not config rep for " + rep_name);
+	if (!rep_folder) return console.log(`${getDate()} | Not config rep for ${rep_name}`);
 
 	var deploy_path = path.join(rep_folder, config.default_deploy);
 	var deploy_file = fs.readFileSync(deploy_path, {encoding: "utf8", flag: "r"});
@@ -57,18 +55,18 @@ function processHook(hook) {
 		try {
 			var step_file = path.join(rep_folder, step);
 			var log = execFileSync(step_file, {uid: 0, cwd: rep_folder, encoding: "utf8", timeout});
-			console.log(`Step ${step} on ${rep_name} rep has success running`);
+			console.log(`${getDate()} | Step ${step} on ${rep_name} rep has success running`);
 			// console.log(`Log for ${rep_name} rep. Step ${step}`);
 			// console.log(log);
 		}
 		catch(e) {
-			console.log(`Step ${step} crash on rep ${rep_name}`);
+			console.log(`${getDate()} | Step ${step} crash on rep ${rep_name}`);
 		}
 	}
 }
 
 
-function loadReps() {
+function loadConfig() {
 	try {
 		var file = fs.readFileSync(config_file, {encoding: "utf8", flag: "r"});
 		config = JSON.parse(file);
@@ -78,14 +76,25 @@ function loadReps() {
 	}
 }
 
+function getDate() {
+	return (new Date().toISOString());
+}
+
+function watchConfig() {
+	fs.watch(config_file, (event, file) => {
+		loadConfig();
+	});
+}
+
 
 function start() {
-	loadReps();
+	loadConfig();
 	createServer();
+	watchConfig();
 
-	setTimeout(() => {
-		processHook({repository: {name: "hookeploy"}});
-	}, 5000);
+	// setTimeout(() => {
+	// 	processHook({repository: {name: "hookeploy"}});
+	// }, 5000);
 }
 
 start();
