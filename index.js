@@ -1,3 +1,4 @@
+const { execFileSync } = require("child_process");
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
@@ -24,7 +25,7 @@ function createServer() {
 		});
 	
 		req.on("end", () => {
-			console.log("Data: ", data);
+			// console.log("Data: ", data);
 			res.end("OK");
 			processHook(data);
 		});
@@ -39,9 +40,12 @@ function createServer() {
 function processHook(hook) {
 	if (hook.length < 50) return console.log("Not github hook");
 
-	var data = JSON.parse(hook);
+	var data = typeof hook == "string" ? JSON.parse(hook) : hook;
 	var rep_name = data.repository.name;
 	var rep_folder = config.reps[rep_name] || null;
+	var timeout = config.deploy_timeout || 900000;
+
+	console.log(`\nWebhook for ${rep_name} has started!`);
 
 	if (!rep_folder) return console.log("Not config rep for " + rep_name);
 
@@ -50,7 +54,16 @@ function processHook(hook) {
 	var deploy_config = JSON.parse(deploy_file);
 
 	for(var step of deploy_config) {
-		console.log(step);
+		try {
+			var step_file = path.join(rep_folder, step);
+			var log = execFileSync(step_file, {uid: 0, cwd: rep_folder, encoding: "utf8", timeout});
+			console.log(`Step ${step} on ${rep_name} rep has success running`);
+			// console.log(`Log for ${rep_name} rep. Step ${step}`);
+			// console.log(log);
+		}
+		catch(e) {
+			console.log(`Step ${step} crash on rep ${rep_name}`);
+		}
 	}
 }
 
@@ -69,6 +82,10 @@ function loadReps() {
 function start() {
 	loadReps();
 	createServer();
+
+	setTimeout(() => {
+		processHook({repository: {name: "hookeploy"}});
+	}, 5000);
 }
 
 start();
