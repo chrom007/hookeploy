@@ -1,0 +1,8 @@
+{
+	"port": 9000,
+	"default_deploy": "deploy.json",
+	"reps": {
+		"hookeploy": "/var/www/hookeploy",
+		"holynews": "/var/www/holynews"
+	}
+}
