@@ -15,7 +15,6 @@ function createServer() {
 	}
 
 	server = http.createServer((req, res) => {
-		var date = new Date();
 		var data = "";
 		
 		req.on("data", (chunk) => {
@@ -36,7 +35,9 @@ function createServer() {
 
 
 function processHook(hook) {
-	if (hook.length < 50) return console.log(`${getDate()} | Not github hook`);
+	if (hook.length < 50) {
+		return console.log(`${getDate()} | Not github hook`);
+	}
 
 	var data = typeof hook == "string" ? JSON.parse(hook) : hook;
 	var rep_name = data.repository.name;
@@ -45,11 +46,18 @@ function processHook(hook) {
 
 	console.log(`\n${getDate()} | Webhook for ${rep_name} has started!`);
 
-	if (!rep_folder) return console.log(`${getDate()} | Not config rep for ${rep_name}`);
+	if (!rep_folder) {
+		return console.log(`${getDate()} | Not config rep for ${rep_name}`);
+	}
 
-	var deploy_path = path.join(rep_folder, config.default_deploy);
-	var deploy_file = fs.readFileSync(deploy_path, {encoding: "utf8", flag: "r"});
-	var deploy_config = JSON.parse(deploy_file);
+	try {
+		var deploy_path = path.join(rep_folder, config.default_deploy);
+		var deploy_file = fs.readFileSync(deploy_path, {encoding: "utf8", flag: "r"});
+		var deploy_config = JSON.parse(deploy_file);
+	}
+	catch(e) {
+		return console.log(`${getDate()} | Deploy config not found for ${rep_name} rep`);
+	}
 
 	for(var step of deploy_config) {
 		try {
