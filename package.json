@@ -1,7 +1,7 @@
 {
   "name": "hookeploy",
   "version": "1.0.0",
-  "description": "Tools for deploy your code by WebHooks",
+  "description": "Tool for deploy your project on you VPS server via Github Webhooks",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",

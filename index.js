@@ -51,7 +51,7 @@ function processHook(hook) {
 	}
 
 	try {
-		var deploy_path = path.join(rep_folder, config.default_deploy);
+		var deploy_path = path.join(rep_folder, config.deploy_name);
 		var deploy_file = fs.readFileSync(deploy_path, {encoding: "utf8", flag: "r"});
 		var deploy_config = JSON.parse(deploy_file);
 	}

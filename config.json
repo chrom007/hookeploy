@@ -1,6 +1,6 @@
 {
 	"port": 9000,
-	"default_deploy": "deploy.json",
+	"deploy_name": "deploy.json",
 	"deploy_timeout": 900000,
 	"reps": {
 		"hookeploy": "/var/www/hookeploy",

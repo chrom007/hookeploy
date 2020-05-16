@@ -12,12 +12,14 @@ Tool for deploy your project on you VPS server via Github Webhooks
 6. Add `steps` in `deploy.json`
 7. Profit!
 
+If you change config.json then webhook listener automaticaly reboot.
+
 ## Default config:
 
 ```json
 {
 	"port": 9000,
-	"default_deploy": "deploy.json",
+	"deploy_name": "deploy.json",
 	"deploy_timeout": 900000,
 	"reps": {
 		"hookeploy": "/var/www/hookeploy",
@@ -29,7 +31,7 @@ Tool for deploy your project on you VPS server via Github Webhooks
 ### Props: 
 
  * `port` - webhook listener port
- * `default_deploy` - default name of deploy config on your reps
+ * `deploy_name` - default name of deploy config on your reps
  * `deploy_timeout` - max time for deploy (default 15 min)
  * `reps` - array with `hookname` and `path` to rep
 
