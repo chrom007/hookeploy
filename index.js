@@ -44,10 +44,10 @@ function processHook(hook) {
 	var rep_folder = config.reps[rep_name] || null;
 	var timeout = config.deploy_timeout || 900000;
 
-	console.log(`\n${getDate()} | Webhook for ${rep_name} has started!`);
+	console.log(`\n${getDate()} | Webhook for "${rep_name}" has started!`);
 
 	if (!rep_folder) {
-		return console.log(`${getDate()} | Not config rep for ${rep_name}`);
+		return console.log(`${getDate()} | Not config rep for "${rep_name}"`);
 	}
 
 	try {
@@ -56,23 +56,23 @@ function processHook(hook) {
 		var deploy_config = JSON.parse(deploy_file);
 	}
 	catch(e) {
-		return console.log(`${getDate()} | Deploy config not found for ${rep_name} rep`);
+		return console.log(`${getDate()} | Deploy config not found for "${rep_name}" rep`);
 	}
 
 	for(var step of deploy_config) {
 		try {
 			var step_file = path.join(rep_folder, step);
 			var log = execFileSync(step_file, {uid: 0, cwd: rep_folder, encoding: "utf8", timeout});
-			console.log(`${getDate()} | Step ${step} on ${rep_name} rep has success running`);
-			// console.log(`Log for ${rep_name} rep. Step ${step}`);
+			console.log(`${getDate()} | Step "${step}" on "${rep_name}" rep has success running`);
+			// console.log(`Log for "${rep_name}" rep. Step "${step}"`);
 			// console.log(log);
 		}
 		catch(e) {
-			return console.log(`${getDate()} | Step ${step} crash on rep ${rep_name}`);
+			return console.log(`${getDate()} | Step "${step}" crash on rep "${rep_name}"`);
 		}
 	}
 
-	console.log(`${getDate()} | All steps for ${rep_name} rep completed successfully!`);
+	console.log(`${getDate()} | All steps for "${rep_name}" rep completed successfully!`);
 }
 
 
