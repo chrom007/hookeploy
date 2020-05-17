@@ -1,4 +1,2 @@
-echo "Installed"
+pm2 start index.js --name hookeploy
 echo "Started"
-sleep 1
-echo "Ended"

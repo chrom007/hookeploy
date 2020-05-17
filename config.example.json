@@ -4,6 +4,6 @@
 	"deploy_timeout": 900000,
 	"reps": {
 		"hookeploy": "/var/www/hookeploy",
-		"holynews": "/var/www/holynews"
+		"helloworld": "/var/www/helloworld"
 	}
 }

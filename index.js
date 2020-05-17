@@ -51,6 +51,7 @@ function processHook(hook) {
 	}
 
 	try {
+		console.log(`${getDate()} | Git pulling for "${rep_name}"`);
 		execSync("git pull", {cwd: rep_folder, uid: 0});
 	}
 	catch(e) {
@@ -87,9 +88,11 @@ function loadConfig() {
 	try {
 		var file = fs.readFileSync(config_file, {encoding: "utf8", flag: "r"});
 		config = JSON.parse(file);
+		console.log(`${getDate()} | Config success loaded`);
 	}
 	catch(e) {
 		config = [];
+		console.log(`${getDate()} | Config loading error`);
 	}
 }
 
