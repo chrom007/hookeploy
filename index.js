@@ -1,4 +1,4 @@
-const { execFileSync } = require("child_process");
+const { execFileSync, execSync } = require("child_process");
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
@@ -48,6 +48,13 @@ function processHook(hook) {
 
 	if (!rep_folder) {
 		return console.log(`${getDate()} | Not config rep for "${rep_name}"`);
+	}
+
+	try {
+		execSync("git pull", {cwd: rep_folder, uid: 0});
+	}
+	catch(e) {
+		return console.log(`${getDate()} | Git pull error for "${rep_name}"`);
 	}
 
 	try {
