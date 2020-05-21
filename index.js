@@ -53,6 +53,7 @@ function processHook(hook) {
 	try {
 		console.log(`${getDate()} | Git pulling for "${rep_name}"`);
 		execSync("git pull", {cwd: rep_folder, uid: 0});
+		execSync("chmod -R 777 " + rep_folder, {cwd: rep_folder, uid: 0});
 	}
 	catch(e) {
 		return console.log(`${getDate()} | Git pull error for "${rep_name}"`);
